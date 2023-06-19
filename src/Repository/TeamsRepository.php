@@ -13,11 +13,13 @@ class TeamsRepository extends ServiceEntityRepository
         parent::__construct($registry, Teams::class);
     }
 
-    public function getTeamsGSCAccessToken(string $TeamsId): mixed
+    public function getTeamsWithPlayerForSale(string $currentTeamsId): mixed
     {
         return $this->createQueryBuilder('t')
             ->innerJoin('t.players','p')
             ->where('count(p.upForSale = true) > 0')
+            ->andWhere('t.id <> :currentTeamsId')
+            ->setParameter('currentTeamsId', $currentTeamsId)
             ->getQuery()
             ->getResult();
     }

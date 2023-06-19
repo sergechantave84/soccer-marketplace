@@ -24,14 +24,17 @@ class Teams
     private ?string $country;
 
     #[ORM\Column(type: 'float')]
-    private ?string $moneyBalance;
+    private ?float $moneyBalance;
 
-    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: Players::class, cascade: ['persist','remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'team', targetEntity: Players::class, cascade: ['persist','remove'], orphanRemoval: true)]
     private Collection $players;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $owner;
 
     public function __construct()
     {
-        $this->siteEngines = new ArrayCollection();
+        $this->players = new ArrayCollection();
     }
 
     /**
@@ -83,17 +86,17 @@ class Teams
     }
 
     /**
-     * @return string|null
+     * @return float|null
      */
-    public function getMoneyBalance(): ?string
+    public function getMoneyBalance(): ?float
     {
         return $this->moneyBalance;
     }
 
     /**
-     * @param string|null $moneyBalance
+     * @param float|null $moneyBalance
      */
-    public function setMoneyBalance(?string $moneyBalance): void
+    public function setMoneyBalance(?float $moneyBalance): void
     {
         $this->moneyBalance = $moneyBalance;
     }
@@ -118,7 +121,7 @@ class Teams
     {
         if (!$this->players->contains($players)) {
             $this->players->add($players);
-            $players->setTeams($this);
+            $players->setTeam($this);
         }
 
         return $this;
@@ -126,13 +129,29 @@ class Teams
 
     public function removePlayers(Players $players): self
     {
-        if ($this->siteEngines->removeElement($players)) {
+        if ($this->players->removeElement($players)) {
             // set the owning side to null (unless already changed)
-            if ($players->getTeams() === $this) {
-                $players->setTeams(null);
+            if ($players->getTeam() === $this) {
+                $players->setTeam(null);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOwner(): ?string
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param string|null $owner
+     */
+    public function setOwner(?string $owner): void
+    {
+        $this->owner = $owner;
     }
 }

@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Créer une équipe {% endblock %}
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+                {{ 'Équipe: ' ~ team.name }} <br>
+                {{ 'Pays: ' ~ team.country }} <br>
+                {{ "Solde d'argent: " ~ team.moneyBalance|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}
+            </div>
+            <div class="col-2">
+                <a class="btn btn-primary" href="{{ path('create_player', { teamId: team.id }) }}" role="button">
+                    Ajouter un joueur
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card-body">
+                    <div class="table-responsive" id="table-responsive">
+                        <table id="basic">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for team in team.players %}
+                                <tr>
+                                    <td>{{ team.name }}</td>
+                                    <td>{{ team.surname }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+          let myTable = new JSTable("#basic",
+            {
+              labels: {
+                placeholder: "Rechercher un joueur...",
+                perPage: "{select} joueurs par page",
+                noRows: "Cette équipe ne dispose d'aucun joueur",
+                info: "Affichage {start} à {end} de {rows} joueurs",
+                loading: "Chargement...",
+                infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+              }
+            }
+          );
+        </script>
+    </div>
+</div>
+{% endblock %}

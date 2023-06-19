@@ -1,0 +1,100 @@
+<div class="modal fade" id="modal-sale">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Vendre un joueur</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form) }}
+            <div class="modal-body">
+                <p>
+                <div class="data-form">
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                {{ form_row(form.player) }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                {{ form_row(form.amount) }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close-modal-register">Annuler</button>
+                <button type="submit" class="btn btn-primary" id="save">Enregistrer</button>
+            </div>
+            {{ form_end(form, { render_rest: false }) }}
+        </div>
+    </div>
+</div>
+
+<script>
+  (() => {
+
+    let selectorPlayer = document.getElementById('player');
+    selectorPlayer.addEventListener('change',
+      () => {
+
+        let hostVirtualAPI = 'http://localhost:8000';
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("GET", hostVirtualAPI + '/get-player/' + selectorPlayer.value, true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+            let response = JSON.parse(this.response);
+            let sales = response.salesJson;
+            if (sales.length > 0) {
+              let inputAmount = document.getElementById('amount');
+              inputAmount.value = sales[sales.length -1].amount
+            }
+          }
+          if (this.readyState == 4 && (this.status == 400 || this.status == 404)) {
+            console.log(JSON.parse(this.response.message));
+          }
+        };
+        xhttp.send();
+      }
+    );
+
+    let btnSave = document.getElementById('save');
+    btnSave.addEventListener('click',
+      () => {
+        let data = {
+          player: document.getElementsByName('player')[0].value,
+          amount: document.getElementsByName('amount')[0].value
+        };
+        save(data)
+      }
+    );
+
+    function save(data) {
+      let hostVirtualAPI = 'http://localhost:8000';
+      let xhttp = new XMLHttpRequest();
+      xhttp.open("POST", hostVirtualAPI + '/market/sale', true);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.response);
+          window.location.reload();
+        }
+        if (this.readyState == 4 && (this.status == 400 || this.status == 404)) {
+          console.log(JSON.parse(this.response.message));
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    }
+  })();
+
+</script>

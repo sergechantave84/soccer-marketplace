@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\PlayersRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: PlayersRepository::class)]
 class Players
@@ -11,20 +14,30 @@ class Players
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['player_read','player_create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(cascade: ['remove','persist'], inversedBy: 'players')]
     #[ORM\JoinColumn(nullable: false,onDelete: "CASCADE")]
-    private ?Teams $teams = null;
+    #[Groups(['player_read','player_create'])]
+    private ?Teams $team = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['player_read','player_create'])]
     private ?string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['player_read','player_create'])]
     private ?string $surname;
 
     #[ORM\Column(type: 'boolean', length: 255)]
+    #[Groups(['player_read','player_create'])]
     private ?bool $upForSale = false;
+
+    #[ORM\OneToMany(mappedBy: 'player', targetEntity: Sales::class, cascade: ['persist','remove'], orphanRemoval: true)]
+    private Collection $sales;
+
+    private $salesJson;
 
     /**
      * @return int|null
@@ -45,17 +58,17 @@ class Players
     /**
      * @return Teams|null
      */
-    public function getTeams(): ?Teams
+    public function getTeam(): ?Teams
     {
-        return $this->teams;
+        return $this->team;
     }
 
     /**
-     * @param Teams|null $teams
+     * @param Teams|null $team
      */
-    public function setTeams(?Teams $teams): void
+    public function setTeam(?Teams $team): void
     {
-        $this->teams = $teams;
+        $this->team = $team;
     }
 
     /**
@@ -104,5 +117,54 @@ class Players
     public function setUpForSale(?bool $upForSale): void
     {
         $this->upForSale = $upForSale;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSales(): Collection
+    {
+        return $this->sales;
+    }
+
+    /**
+     * @param Collection $sales
+     */
+    public function setSales(Collection $sales): void
+    {
+        $this->sales = $sales;
+    }
+
+    public function addSales(Sales $sale): self
+    {
+        if (!$this->sales->contains($sale)) {
+            $this->sales->add($sale);
+            $sale->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSales(Sales $sale): self
+    {
+        if ($this->sales->removeElement($sale)) {
+            // set the owning side to null (unless already changed)
+            if ($sale->getPlayer() === $this) {
+                $sale->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    #[Groups(['player_read', 'player_create'])]
+    public function getSalesJson()
+    {
+        return $this->salesJson;
+    }
+
+    public function setSalesJson($salesJson)
+    {
+        $this->salesJson = $salesJson;
     }
 }

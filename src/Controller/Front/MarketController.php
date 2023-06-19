@@ -3,9 +3,15 @@
 namespace App\Controller\Front;
 
 use App\Controller\BaseController;
+use App\Entity\Sales;
+use App\Form\Handler\SaleHandler;
+use App\Form\Type\SaleType;
+use App\Repository\PlayersRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Exception;
 
 /**
  * Class MarketController
@@ -14,27 +20,76 @@ use Exception;
 class MarketController extends BaseController
 {
     /**
-     * @Route("/sale", name="sale")
+     * @param Request $request
+     * @param PlayersRepository $playersRepository
      *
      * @return Response
-     * @throws Exception
      */
-    public function sale(): Response
+    #[Route('/market/', name: 'market', methods: ["GET"])]
+    public function market(Request $request, PlayersRepository $playersRepository): Response
     {
-        try {
-            return $this->render('front/sale/list.html.twig');
-        } catch (Exception $exception) {
-            throw $exception;
-        }
+        $login = $request->getSession()->get('login');
+        $playersToUpSale = $playersRepository->getPlayersForSale($login);
+        $playersAvailable = $playersRepository->getPlayersAvailable($login)->getQuery()->getResult();
+        $sale = new Sales();
+        $form = $this->createForm(SaleType::class, $sale,
+            [
+                'action' => $this->generateUrl('sale'),
+                'attr'   => ['id'=>'form-sale']
+            ]
+        );
+
+        return $this->render('front/market.html.twig', [
+            'playersToUpSale'     => $playersToUpSale,
+            'form'                => $form->createView(),
+            'nonePlayerAvailable' => count($playersAvailable) > 0,
+        ]);
     }
 
     /**
-     * @Route("/purchase", name="purchase")
+     * @param Request $request
+     * @param PlayersRepository $playersRepository
+     * @param EntityManagerInterface $entityManager
      *
+     * @return JsonResponse
+     */
+    #[Route('/market/sale', name: 'sale', methods: ["POST"])]
+    public function sale(Request $request, PlayersRepository $playersRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $sale = new Sales();
+        $form = $this->createForm(SaleType::class, $sale,
+            [
+                'action' => $this->generateUrl('sale'),
+                'attr'   => ['id'=>'form-sale']
+            ]
+        );
+        $formHandler = new SaleHandler(
+            $form,
+            $request,
+            $entityManager
+        );
+        $sale = $formHandler->process();
+        if ($sale) {
+            return new JsonResponse(
+                [
+                    'message' => 'Sale created successfull',
+                ],
+                Response::HTTP_OK
+            );
+        }
+        $data = [
+            'message' => 'une erreur s\est produite',
+        ];
+
+        return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @return Response
      */
+    #[Route('/market/purchase', name: 'purchase', methods: ["POST", "GET"])]
     public function purchase(): Response
     {
-        return $this->render('front/purchase/list.html.twig');
+        return $this->render('front/purchase/purchase.html.twig');
     }
 }

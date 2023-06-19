@@ -1,0 +1,109 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Vente/achat de jouers entre équipes {% endblock %}
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="row">
+                    <h2> Vendre mes joueurs </h2>
+                    <div class="card-body">
+                        {% if nonePlayerAvailable %}
+                            <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-sale">Vendre un joueur</a>
+                        {% else %}
+                            <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-noneplayer-available">Vendre un joueur</a>
+                        {% endif %}
+                        <div class="table-responsive">
+                            <table id="sale">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Montant</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for player in playersToUpSale %}
+                                    <tr>
+                                        <td>{{ player.name }}</td>
+                                        <td>{{ player.surname }}</td>
+                                        <td>
+                                            {% set sale = player.sales|last %}
+                                            {{ sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <h2> Acheter des joueurs </h2>
+                    <div class="card-body">
+                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-purchase">Acheter un joueur</a>
+
+                        <div class="table-responsive">
+                            <table id="purchase">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Montant</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for player in playersToUpSale %}
+                                    <tr>
+                                        <td>{{ player.name }}</td>
+                                        <td>{{ player.surname }}</td>
+                                        <td>
+                                            {% set sale = player.sales|last %}
+                                            {{ sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'front/sale/sale.html.twig' with {'isConnected': true} %}
+    {% include 'front/purchase/purchase.html.twig' with {'isConnected': true} %}
+
+    {% include 'front/sale/noneplayer_available.html.twig' with {'isConnected': true} %}
+
+    <script>
+      let myTableSale = new JSTable("#sale", {
+        labels: {
+          placeholder: "Rechercher un joueur...",
+          perPage: "{select} joueur par page",
+          noRows: "Aucun joueur mis en vente trouvé",
+          info: "Affichage {start} à {end} de {rows} joueurs mis en vente",
+          loading: "Chargement...",
+          infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+        }
+      });
+
+      let myTablePurchase = new JSTable("#purchase", {
+        labels: {
+          placeholder: "Rechercher un joueur...",
+          perPage: "{select} joueur par page",
+          noRows: "Aucun joueur trouvé",
+          info: "Affichage {start} à {end} de {rows} joueurs",
+          loading: "Chargement...",
+          infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+        }
+      });
+
+    </script>
+
+{% endblock %}

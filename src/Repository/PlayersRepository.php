@@ -12,4 +12,24 @@ class PlayersRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Players::class);
     }
+
+    public function getPlayersForSale(string $currentTeamsEmail): mixed
+    {
+        return $this->createQueryBuilder('p')
+                    ->innerJoin('p.team','t')
+                    ->where('t.owner = :currentTeamsEmail')
+                    ->andWhere('p.upForSale = true')
+                    ->setParameter('currentTeamsEmail', $currentTeamsEmail)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function getPlayersAvailable(string $currentTeamsEmail): mixed
+    {
+        return $this->createQueryBuilder('p')
+                    ->innerJoin('p.team','t')
+                    ->where('t.owner = :currentTeamsEmail')
+                    ->andWhere('p.upForSale = false')
+                    ->setParameter('currentTeamsEmail', $currentTeamsEmail);
+    }
 }
