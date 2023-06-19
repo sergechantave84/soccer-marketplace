@@ -1,0 +1,24 @@
+<table class="table table-striped datatable">
+    <thead>
+        <tr>
+            <th>{{ 'listing_seller.price'|trans({},'label', locale) }}</th>
+            <th>{{ 'listing_seller.seller'|trans({},'label', locale) }}</th>
+            <th>{{ 'listing_seller.state'|trans({},'label', locale) }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for productSeller in listProductSellers %}
+        <tr>
+            <td>
+                {{ productSeller.price ~ ' ' ~ euro_symbol }}
+            </td>
+            <td>
+                {{ productSeller.seller.businessName }}
+            </td>
+            <td>
+                {{ productSeller.product.getTranslationLabel|trans({},'label', locale) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

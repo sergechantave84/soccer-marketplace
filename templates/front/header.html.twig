@@ -1,0 +1,22 @@
+<ul class="nav nav-tabs justify-content-center menu-bar" id="ul-accueil">
+    <li class="nav-item">
+        <a class="nav-link {% if homepage_active is defined and homepage_active %}active{% endif %}" href="{{ path('home') }}">
+            {{ 'menu.price_comparison'|trans({},'label', locale) }}
+        </a>
+    </li>
+
+    {% if app.user %}
+        <li class="nav-item li-is-user-connect">
+            <a class="nav-link " href="{{ logout_path('main') }}" id="btn-logout">
+                {{ 'security.login.logout'|trans({},'label', locale) }}
+            </a>
+        </li>
+        <li class="nav-item li-is-user-connect">
+            <a class="nav-link ">
+                <span class="display-username" id="hello-user-connect">Bonjour {{ app.user.fullname }}</span>
+            </a>
+
+        </li>
+    {% endif %}
+
+</ul>

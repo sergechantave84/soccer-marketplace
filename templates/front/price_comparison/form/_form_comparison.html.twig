@@ -1,0 +1,32 @@
+<div class="data-form">
+
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-8 col-md-8 col-lg-8">
+            <div class="form-group">
+                {{ form_row(form.product) }}
+            </div>
+        </div>
+
+        <div class="col-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                {{ form_row(form.state) }}
+            </div>
+        </div>
+
+        <div class="col-6 col-md-2 col-lg-6">
+            <div class="form-group">
+                {{ form_row(form.price) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" value="Rechercher" id="search">
+    </div>
+
+    {{ form_end(form, {render_rest: false}) }}
+</div>
+
+<br>

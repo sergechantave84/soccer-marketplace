@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Error!{% endblock %}</title>
+    </head>
+    <body>
+        <div style="width: 500px; margin: auto;">
+            <h1>
+                Oups, une erreur est survenue! Veulliez contacter l'adminstrateur! <br>
+                çi-dessous les détails de l'erreur : <br>
+            </h1>
+            code        : {{ code }} <br>
+            Message     : {{ message }}
+        </div>
+    </body>
+</html>
