@@ -76,10 +76,10 @@
             </div>
         </div>
     </div>
-    {% include 'front/sale/sale.html.twig' with {'isConnected': true} %}
-    {% include 'front/purchase/purchase.html.twig' with {'isConnected': true} %}
+    {% include 'front/sale/sale.html.twig' %}
+    {% include 'front/purchase/purchase.html.twig' %}
 
-    {% include 'front/sale/noneplayer_available.html.twig' with {'isConnected': true} %}
+    {% include 'front/sale/noneplayer_available.html.twig' %}
 
     <script>
       let myTableSale = new JSTable("#sale", {
