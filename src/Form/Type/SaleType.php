@@ -51,7 +51,7 @@ class SaleType extends AbstractType
                     'expanded'      => false,
                     'multiple'      => false,
                     'required'      => true,
-                    'attr' => [
+                    'attr'          => [
                         "class" => "form-control",
                     ],
                     'query_builder' => function (PlayersRepository $playersRepository) {

@@ -45,11 +45,7 @@ class PurchaseType extends AbstractType
                         "class" => "form-control",
                     ],
                     'query_builder' => function (TeamsRepository $teamsRepository) {
-                        $teams = $teamsRepository->getTeamsWithPlayerForSale($this->currentSeller);
-                        $filterSelectAll = new \stdClass();
-                        $filterSelectAll->id = 'all';
-                        $filterSelectAll->name = '------- TOUS -------';
-                        return array_merge($filterSelectAll, $teams);
+                        return $teamsRepository->getTeamsWithPlayerForSale($this->currentSeller);
                     },
                 ]
             );

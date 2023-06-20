@@ -19,8 +19,6 @@ class TeamsRepository extends ServiceEntityRepository
             ->innerJoin('t.players','p')
             ->where('count(p.upForSale = true) > 0')
             ->andWhere('t.id <> :currentTeamsId')
-            ->setParameter('currentTeamsId', $currentTeamsId)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('currentTeamsId', $currentTeamsId);
     }
 }
