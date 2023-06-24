@@ -3,25 +3,12 @@
 namespace App\Form\Type;
 
 use App\Entity\Players;
-use App\Entity\Teams;
 use App\Repository\PlayersRepository;
-use App\Repository\ProductRepository;
-use App\Repository\ProductUserRepository;
-use Doctrine\DBAL\Types\FloatType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class SaleType extends AbstractType
@@ -90,14 +77,5 @@ class SaleType extends AbstractType
     public function getBlockPrefix()
     {
         return '';
-    }
-
-    /**
-     * @return string
-     */
-    private function labelMinPrice()
-    {
-        return $this->translator
-            ->trans('price_comparison.min_price', [], 'label');
     }
 }

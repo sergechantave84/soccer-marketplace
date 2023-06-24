@@ -50,7 +50,9 @@ class TeamHandler
             return $this->form;
         }
         if ($this->form->isSubmitted()) {
-            $team->setOwner(($this->request->getSession()->get('login')));
+            if ($team instanceof Teams) {
+                $team->setOwner(($this->request->getSession()->get('login')));
+            }
             $this->entityManager->persist($team);
             $this->entityManager->flush();
         }

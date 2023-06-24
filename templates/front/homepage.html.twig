@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "base.html.twig"  %}
 
 {% block title %} Commerce entre équipes de football {% endblock %}
 {% block stylesheets %}
@@ -7,7 +7,6 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-
             <div class="col-lg-12">
                 <div class="row">
                     <div class="card-body">
@@ -15,11 +14,14 @@
                             <table id="basic">
                                 <thead>
                                 <tr>
-                                    <th>Nom</th>
+                                    <th>Nom de l'équipe</th>
                                     <th>Pays</th>
                                     <th>Solde d'argent</th>
                                     <th>Joueurs</th>
+                                    <th>Propriétaire de l'équipe</th>
+                                    {% if login %}
                                     <th>Actions</th>
+                                    {% endif %}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -30,14 +32,19 @@
                                         <td>{{ team.moneyBalance|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}</td>
                                         <td>
                                             {% for player in team.players %}
-                                                    {{ '- ' ~ player.name ~ ' ' ~ player.surname }} <br>
+                                                {{ '- ' ~ player.name ~ ' ' ~ player.surname }} <br>
                                             {% endfor %}
                                         </td>
+                                        <td>{{ team.owner }}</td>
+                                        {% if login %}
                                         <td>
-                                            <a class="btn btn-primary" href="{{ path('get_team', { id: team.id }) }}" role="button">
-                                                Ajouter un joueur
-                                            </a>
+                                            {% if team.owner == login  %}
+                                                <a class="btn btn-primary" href="{{ path('get_team', { id: team.id }) }}" role="button">
+                                                    Ajouter un joueur
+                                                </a>
+                                            {% endif %}
                                         </td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>

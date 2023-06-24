@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\PlayersRepository;
 use App\Repository\SalesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;

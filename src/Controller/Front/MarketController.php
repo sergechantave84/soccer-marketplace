@@ -48,40 +48,43 @@ class MarketController extends BaseController
 
     /**
      * @param Request $request
-     * @param PlayersRepository $playersRepository
      * @param EntityManagerInterface $entityManager
      *
      * @return JsonResponse
      */
     #[Route('/market/sale', name: 'sale', methods: ["POST"])]
-    public function sale(Request $request, PlayersRepository $playersRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function sale(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $sale = new Sales();
-        $form = $this->createForm(SaleType::class, $sale,
-            [
-                'action' => $this->generateUrl('sale'),
-                'attr'   => ['id'=>'form-sale']
-            ]
-        );
-        $formHandler = new SaleHandler(
-            $form,
-            $request,
-            $entityManager
-        );
-        $sale = $formHandler->process();
-        if ($sale) {
-            return new JsonResponse(
+        try {
+            $sale = new Sales();
+            $form = $this->createForm(SaleType::class, $sale,
                 [
-                    'message' => 'Sale created successfull',
-                ],
-                Response::HTTP_OK
+                    'action' => $this->generateUrl('sale'),
+                    'attr'   => ['id'=>'form-sale']
+                ]
             );
-        }
-        $data = [
-            'message' => 'une erreur s\est produite',
-        ];
+            $formHandler = new SaleHandler(
+                $form,
+                $request,
+                $entityManager
+            );
+            $sale = $formHandler->process();
+            if ($sale) {
+                return new JsonResponse(
+                    [
+                        'message' => 'Sale created successfull',
+                    ],
+                    Response::HTTP_OK
+                );
+            }
+            $data = [
+                'message' => 'une erreur s\'est produite',
+            ];
 
-        return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+        } catch (\Exception $e) {
+            return new JsonResponse($e, Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

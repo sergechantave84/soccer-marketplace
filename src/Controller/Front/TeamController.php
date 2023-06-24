@@ -8,12 +8,10 @@ use App\Form\Handler\TeamHandler;
 use App\Form\Type\TeamType;
 use App\Repository\TeamsRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Exception;
 
 /**
@@ -31,15 +29,11 @@ class TeamController extends BaseController
     #[Route('/home', name: 'home', methods: ["POST", "GET"])]
     public function home(TeamsRepository $teamsRepository): Response
     {
-        try {
-            return $this->render('front/homepage.html.twig',
-                [
-                    'teams' => $teamsRepository->findAll(),
-                ]
-            );
-        } catch (Exception $exception) {
-            throw $exception;
-        }
+        return $this->render('front/homepage.html.twig',
+            [
+                'teams' => $teamsRepository->findAll(),
+            ]
+        );
     }
 
     /**
@@ -65,7 +59,7 @@ class TeamController extends BaseController
         $form = $this->createForm(TeamType::class, $team,
             [
                 'action' => $this->generateUrl('create_team'),
-                'attr' => ['id'=>'form-team']
+                'attr'   => ['id'=>'form-team']
             ]
         );
         if (Request::METHOD_POST == $request->getMethod()) {

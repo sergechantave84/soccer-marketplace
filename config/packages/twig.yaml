@@ -2,9 +2,11 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         euro_symbol: '%euro_symbol%'
+        host: '%host%'
 
 when@test:
     twig:
         strict_variables: true
         globals:
             euro_symbol: '%euro_symbol%'
+            host: '%host%'

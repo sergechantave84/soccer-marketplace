@@ -14,8 +14,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Exception;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Exception;
 
 /**
  * Class PlayerController
@@ -64,13 +64,17 @@ class PlayerController extends BaseController
     /**
      * @param Request $request
      * @param PlayersRepository $playerRepository
+     * @param SalesRepository $salesRepository
      *
      * @return JsonResponse
      * @throws ExceptionInterface
      */
     #[Route('/get-player/{id}', name: 'get_player', methods: ["GET"])]
-    public function getPlayer(Request $request, PlayersRepository $playerRepository, SalesRepository $salesRepository): JsonResponse
-    {
+    public function getPlayer(
+        Request $request,
+        PlayersRepository $playerRepository,
+        SalesRepository $salesRepository
+    ): JsonResponse {
         $serializer = SerializerStandard::getJsonSerializer();
         $player = $playerRepository->find($request->get('id'));
         if ($player instanceof Players) {
