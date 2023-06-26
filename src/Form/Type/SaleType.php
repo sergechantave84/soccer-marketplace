@@ -3,6 +3,7 @@
 namespace App\Form\Type;
 
 use App\Entity\Players;
+use App\Entity\Sales;
 use App\Repository\PlayersRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -66,7 +67,7 @@ class SaleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'App\Entity\Sales',
+                'data_class' => Sales::class,
             )
         );
     }
@@ -74,7 +75,7 @@ class SaleType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

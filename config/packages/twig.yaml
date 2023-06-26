@@ -3,6 +3,7 @@ twig:
     globals:
         euro_symbol: '%euro_symbol%'
         host: '%host%'
+        valueOptionALL: '%valueOptionALL%'
 
 when@test:
     twig:
@@ -10,3 +11,4 @@ when@test:
         globals:
             euro_symbol: '%euro_symbol%'
             host: '%host%'
+            valueOptionALL: '%valueOptionALL%'

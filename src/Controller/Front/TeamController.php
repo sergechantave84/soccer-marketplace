@@ -47,14 +47,21 @@ class TeamController extends BaseController
 
     /**
      * @param Request $request
+     * @param TeamsRepository $teamsRepository
      * @param EntityManagerInterface $entityManager
      *
      * @return Response
-     * @throws Exception
      */
     #[Route('/create-team', name: 'create_team', methods: ["POST", "GET"])]
-    public function createTeam(Request $request, EntityManagerInterface $entityManager): Response
+    public function createTeam(Request $request, TeamsRepository $teamsRepository, EntityManagerInterface $entityManager): Response
     {
+        $login = $request->getSession()->get('login');
+        if (is_null($login)) {
+            return new Response(
+                'Vous devez être connecté pour accéder à ce menu',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
         $team = new Teams();
         $form = $this->createForm(TeamType::class, $team,
             [
@@ -70,6 +77,9 @@ class TeamController extends BaseController
             );
             $team = $formHandler->process();
             if ($team instanceof Teams) {
+                $hasTeam = ! ($teamsRepository->findBy(['owner' => $login]) === []);
+                $request->getSession()->set('hasTeam', $hasTeam);
+
                 return $this->redirectToRoute('get_team', [
                     'id' => $team->getId(),
                 ]);
@@ -100,16 +110,21 @@ class TeamController extends BaseController
 
     /**
      * @param Request $request
+     * @param TeamsRepository $teamsRepository
      *
      * @return JsonResponse
      */
     #[Route('/set-email', name: 'set_email', methods: ["POST"])]
-    public function setEmail(Request $request): JsonResponse
+    public function setEmail(Request $request, TeamsRepository $teamsRepository): JsonResponse
     {
         $data = json_decode($request->getContent());
-        $request->getSession()->set('login', $data->login);
+        $session = $request->getSession();
+        $session->set('login', $data->login);
+        $login = $session->get('login');
+        $hasTeam = ! ($teamsRepository->findBy(['owner' => $login]) === []);
+        $request->getSession()->set('hasTeam', $hasTeam);
         $data = [
-            'email' => $request->getSession()->get('login')
+            'email' => $login,
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
@@ -124,6 +139,7 @@ class TeamController extends BaseController
     public function clearEmail(Request $request): Response
     {
         $request->getSession()->set('login', null);
+        $request->getSession()->set('hasTeam', null);
 
         return $this->redirectToRoute('home');
     }

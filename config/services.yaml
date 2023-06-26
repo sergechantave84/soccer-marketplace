@@ -6,6 +6,7 @@
 parameters:
     euro_symbol: '€'
     host: 'http://localhost:8000'
+    valueOptionALL: 'ALL'
 
 services:
     # default configuration for services in *this* file

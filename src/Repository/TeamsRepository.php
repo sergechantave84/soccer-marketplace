@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Teams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class TeamsRepository extends ServiceEntityRepository
@@ -13,12 +15,16 @@ class TeamsRepository extends ServiceEntityRepository
         parent::__construct($registry, Teams::class);
     }
 
-    public function getTeamsWithPlayerForSale(string $currentTeamsId): mixed
+    /**
+     * @param string $owner
+     *
+     * @return QueryBuilder
+     */
+    public function getTeamsWithPlayerForSale(string $owner): QueryBuilder
     {
         return $this->createQueryBuilder('t')
-            ->innerJoin('t.players','p')
-            ->where('count(p.upForSale = true) > 0')
-            ->andWhere('t.id <> :currentTeamsId')
-            ->setParameter('currentTeamsId', $currentTeamsId);
+            ->innerJoin('t.players','p', Join::WITH, 'p.upForSale = true')
+            ->where('t.owner <> :owner')
+            ->setParameter('owner', $owner);
     }
 }

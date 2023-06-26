@@ -32,7 +32,7 @@
                                         <td>{{ player.surname }}</td>
                                         <td>
                                             {% set sale = player.sales|last %}
-                                            {{ sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}
+                                            {{ sale ? sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol : '' }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -49,23 +49,18 @@
                         <a href="#" class="btn btn-default" data-toggle="modal" data-target="#modal-purchase">Acheter un joueur</a>
 
                         <div class="table-responsive">
-                            <table id="purchase">
+                            <table id="myPlayers">
                                 <thead>
                                 <tr>
                                     <th>Nom</th>
                                     <th>Prénom</th>
-                                    <th>Montant</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for player in playersToUpSale %}
+                                {% for player in myPlayers %}
                                     <tr>
                                         <td>{{ player.name }}</td>
                                         <td>{{ player.surname }}</td>
-                                        <td>
-                                            {% set sale = player.sales|last %}
-                                            {{ sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol }}
-                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -85,7 +80,7 @@
       let myTableSale = new JSTable("#sale", {
         labels: {
           placeholder: "Rechercher un joueur...",
-          perPage: "{select} joueur par page",
+          perPage: "{select} joueurs par page",
           noRows: "Aucun joueur mis en vente trouvé",
           info: "Affichage {start} à {end} de {rows} joueurs mis en vente",
           loading: "Chargement...",
@@ -93,10 +88,10 @@
         }
       });
 
-      let myTablePurchase = new JSTable("#purchase", {
+      let myTablePurchase = new JSTable("#myPlayers", {
         labels: {
           placeholder: "Rechercher un joueur...",
-          perPage: "{select} joueur par page",
+          perPage: "{select} joueurs par page",
           noRows: "Aucun joueur trouvé",
           info: "Affichage {start} à {end} de {rows} joueurs",
           loading: "Chargement...",

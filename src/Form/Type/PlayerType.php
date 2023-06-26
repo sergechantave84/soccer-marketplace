@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Players;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +37,7 @@ class PlayerType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'App\Entity\Players',
+                'data_class' => Players::class,
             )
         );
     }
@@ -44,7 +45,7 @@ class PlayerType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

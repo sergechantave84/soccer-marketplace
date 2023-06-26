@@ -7,20 +7,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {{ form_start(form) }}
+            {{ form_start(formSale) }}
             <div class="modal-body">
                 <p>
                 <div class="data-form">
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="form-group">
-                                {{ form_row(form.player) }}
+                                {{ form_row(formSale.player) }}
                             </div>
                         </div>
 
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="form-group">
-                                {{ form_row(form.amount) }}
+                                {{ form_row(formSale.amount) }}
                             </div>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="close-modal-register">Annuler</button>
                 <button type="submit" class="btn btn-primary" id="save">Enregistrer</button>
             </div>
-            {{ form_end(form, { render_rest: false }) }}
+            {{ form_end(formSale, { render_rest: false }) }}
         </div>
     </div>
 </div>

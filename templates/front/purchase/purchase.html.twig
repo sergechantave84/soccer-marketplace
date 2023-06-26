@@ -2,35 +2,210 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Renseigner un email</h4>
+                <h4 class="modal-title">Acheter un joueur</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <p>
-                <div>
-                    Email: <input name="login" type="text" class="form-control" />
-                </div>
+                    {{ form_start(formPurchase) }}
+                    <div class="data-form">
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    {{ form_row(formPurchase.team) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(formPurchase, { render_rest: false }) }}
+                </p>
+                <p>
+                    <div class="table-responsive">
+                        <table id="players">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Montant</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="content-players">
+                            {% for player in playersToPurchase %}
+                                <tr>
+                                    <td>{{ player.name }}</td>
+                                    <td>{{ player.surname }}</td>
+                                    <td>
+                                        {% set sale = player.sales|last %}
+                                        {% set saleAmount = sale ? sale.amount|number_format(2, ',', '.') ~ ' ' ~ euro_symbol : '' %}
+                                        {% set saleAmountFormatNumber = sale ? sale.amount : 0.00 %}
+                                        {{ saleAmount }}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary purchase-joueur"
+                                           href="#"
+                                           data-id="{{ player.id }}"
+                                           data-name="{{ player.name }}"
+                                           data-surname="{{ player.surname }}"
+                                           data-sale="{{ saleAmountFormatNumber }}"
+                                           role="button" onclick="checkPurchase(event, this)">
+                                            Acheter ce joueur
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </p>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="close-modal-register">Annuler</button>
-                <button type="button" class="btn btn-primary" id="save-email">Enregistrer</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+  function checkPurchase(event, object) {
+    event.preventDefault();
+    let player = {
+      id: object.getAttribute('data-id'),
+      name: object.getAttribute('data-name'),
+      surname: object.getAttribute('data-surname'),
+      playerSale: object.getAttribute('data-sale'),
+      teamSolde: '{{ buyerTeam.moneyBalance }}',
+      buyerTeamId: '{{ buyerTeam.id }}',
+    }
+    if (parseFloat(player.teamSolde) < parseFloat(player.playerSale)) {
+      alert("Vous ne disposez pas de solde suffisant pour acheter ce joueur. Votre solde actuel est de " + euro.format(player.teamSolde));
+    } else {
+      if (window.confirm("Cet achat sera débité sur votre solde actuel de "
+        + euro.format(player.teamSolde) + ". Etes-vous sûr de vouloir acheter le joueur "
+        + player.name + ' ' + player.surname + " au montant de " + euro.format(player.playerSale) + " ?")
+      ) {
+        purchase(player);
+      }
+    }
+  }
+
+  function purchase(data) {
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("POST", '{{ host }}/market/purchase', true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(this.response);
+        window.location.reload();
+      }
+      if (this.readyState == 4 && (this.status == 400 || this.status == 404)) {
+        console.log(JSON.parse(this.response.message));
+      }
+    };
+    xhttp.send(JSON.stringify(data));
+  }
+
+  function addOptionALL(selectorTeam) {
+    let optionALL = document.createElement('option');
+    optionALL.textContent = '----- TOUS -----';
+    optionALL.setAttribute('value', '{{ valueOptionALL }}');
+    optionALL.setAttribute('selected', 'true');
+    selectorTeam.append(optionALL);
+  }
+
+  let tablePlayers = new JSTable("#players", {
+    labels: {
+      placeholder: "Rechercher un joueur...",
+      perPage: "{select} joueurs par page",
+      noRows: "Aucun joueur mis en vente trouvé",
+      info: "Affichage {start} à {end} de {rows} joueurs mis en vente",
+      loading: "Chargement...",
+      infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+    }
+  });
   (() => {
-    let btnSave = document.getElementById('save-email');
-    btnSave.addEventListener('click',
+    let selectorTeam = document.getElementById('team');
+    addOptionALL(selectorTeam);
+    selectorTeam.addEventListener('change',
       () => {
-        let data = {
-          login: document.getElementsByName('login')[0].value
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("GET", '{{ host }}/market/players-by-team?login={{ login }}&teamId=' + selectorTeam.value, true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            let contentPlayers = document.getElementById('content-players');
+            contentPlayers.innerHTML = '';
+            let players = JSON.parse(this.response);
+            players.forEach((function (e) {
+              let tr = document.createElement("tr");
+
+              let tdName = document.createElement("td");
+              tdName.textContent = e.name;
+              tr.append(tdName);
+
+              let tdSurname = document.createElement("td");
+              tdSurname.textContent = e.surname;
+              tr.append(tdSurname);
+
+              let tdSale = document.createElement("td");
+              let sale = '';
+              let saleFloat = '0.00';
+              let sales = e.salesJson;
+              if (sales.length > 0) {
+                sale = sales[sales.length -1].amount;
+                saleFloat = sale;
+                sale = euro.format(sale)
+              }
+              tdSale.textContent = sale;
+              tr.append(tdSale);
+
+              let tdActions = document.createElement("td");
+              let a = document.createElement("a");
+              a.setAttribute('class', 'btn btn-primary purchase-joueur');
+              a.setAttribute('data-id', e.id);
+              a.setAttribute('data-name', e.name);
+              a.setAttribute('data-surname', e.surname);
+              a.setAttribute('data-sale', saleFloat);
+              a.setAttribute('role', 'button');
+              a.addEventListener('click',
+                (event) => {
+                  checkPurchase(event, a);
+                }
+              );
+              a.textContent = 'Acheter ce joueur';
+              tdActions.append(a);
+
+              tr.append(tdActions);
+              contentPlayers.append(tr);
+            }));
+            /*let tablePlayers2 = new JSTable("#players", {
+              labels: {
+                placeholder: "Rechercher un joueur...",
+                perPage: "{select} joueurs par page",
+                noRows: "Aucun joueur mis en vente trouvé",
+                info: "Affichage {start} à {end} de {rows} joueurs mis en vente",
+                loading: "Chargement...",
+                infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+              }
+            });*/
+            /*tablePlayers.on("update", function () {
+              this.config.labels = {
+                placeholder: "Rechercher un 50 joueur...",
+                perPage: "{select} joueurs par page",
+                noRows: "Aucun joueur mis en vente trouvé",
+                info: "Affichage {start} à {end} de {rows} joueurs mis en vente",
+                loading: "Chargement...",
+                infoFiltered: "Affichage {start} à {end} de {rows} joueurs (affichage sur {rowsTotal} joueurs)"
+              }
+            });*/
+          }
+          if (this.readyState == 4 && (this.status == 400 || this.status == 404)) {
+            console.log(JSON.parse(this.response.message));
+          }
         };
-        //save(data)
+        xhttp.send();
       }
     );
   })();

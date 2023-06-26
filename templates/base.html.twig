@@ -41,6 +41,7 @@
 
         {% block body %}
             {% set login = app.session.get('login') %}
+            {% set hasTeam = app.session.get('hasTeam') %}
             <div className="wrapper">
                 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
 
@@ -59,7 +60,13 @@
                         </li>
                         <li class="nav-item d-none d-sm-inline-block">
                             {% if login %}
-                                <a href="{{ path('market') }}" class="nav-link">Vendre/Acheter des joueurs</a>
+                                {% if hasTeam %}
+                                    <a href="{{ path('market') }}" class="nav-link">Vendre/Acheter des joueurs</a>
+                                {% else %}
+                                    <a href="#" class="nav-link" onclick="alert('Vous devez disposer d\'une équipe pour accéder à ce menu')">
+                                        Vendre/Acheter des joueurs
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 <a href="#" class="nav-link" onclick="alert('Session expirée. Vous devrez reseigner une adresse mail pour accéder à ce menu')">
                                     Vendre/Acheter des joueurs
@@ -90,5 +97,13 @@
             </div>
             {% include 'front/security/register.html.twig' %}
         {% endblock %}
+        <script>
+          const euro = new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 2
+          });
+        </script>
+
     </body>
 </html>

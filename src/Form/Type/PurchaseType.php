@@ -2,28 +2,22 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Players;
 use App\Entity\Teams;
 use App\Repository\TeamsRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class PurchaseType extends AbstractType
 {
-    /**
-     * @var User|UserInterface|null
-     */
-    private User|null|UserInterface $currentSeller;
+    private string $owner;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->currentSeller = $tokenStorage->getToken()->getUser();
+        $this->owner = $requestStack->getCurrentRequest()->getSession()->get('login');
     }
 
     /**
@@ -38,6 +32,7 @@ class PurchaseType extends AbstractType
                 [
                     'class'         => Teams::class,
                     'label'         => "Equipes",
+                    'choice_label'  => 'name',
                     'expanded'      => false,
                     'multiple'      => false,
                     'required'      => true,
@@ -45,7 +40,7 @@ class PurchaseType extends AbstractType
                         "class" => "form-control",
                     ],
                     'query_builder' => function (TeamsRepository $teamsRepository) {
-                        return $teamsRepository->getTeamsWithPlayerForSale($this->currentSeller);
+                        return $teamsRepository->getTeamsWithPlayerForSale($this->owner);
                     },
                 ]
             );
@@ -58,7 +53,7 @@ class PurchaseType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'App\Entity\Players',
+                //'data_class' => Players::class,
             )
         );
     }
@@ -66,7 +61,7 @@ class PurchaseType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

@@ -3,11 +3,7 @@
 namespace App\Form\Type;
 
 use App\Entity\Teams;
-use App\Repository\ProductRepository;
-use App\Repository\ProductUserRepository;
-use Doctrine\DBAL\Types\FloatType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -63,7 +59,7 @@ class TeamType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'App\Entity\Teams',
+                'data_class' => Teams::class,
             )
         );
     }
@@ -71,7 +67,7 @@ class TeamType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

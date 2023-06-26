@@ -6,6 +6,7 @@ use App\Repository\TeamsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[
     ORM\Entity(repositoryClass: TeamsRepository::class),
@@ -15,21 +16,26 @@ class Teams
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['player_read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['player_read'])]
     private ?string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['player_read'])]
     private ?string $country;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(['player_read'])]
     private ?float $moneyBalance;
 
     #[ORM\OneToMany(mappedBy: 'team', targetEntity: Players::class, cascade: ['persist','remove'], orphanRemoval: true)]
     private Collection $players;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['player_read'])]
     private ?string $owner;
 
     public function __construct()
