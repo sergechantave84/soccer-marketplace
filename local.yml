@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: soccer_marketplace_local_php
+    networks:
+      - soccer_marketplace_local
+    environment:
+      - WITH_XDEBUG=true
+    volumes:
+      - ./:/var/www/:rw,cached
+
+  symfony:
+    container_name: soccer_marketplace_local_symfony
+    networks:
+      - soccer_marketplace_local
+    ports:
+      - "8303:443"
+    volumes:
+      - ./public:/var/www/public:ro
+
+  mysql:
+    image: mariadb:10.4
+    container_name: soccer_marketplace_local_mysql
+    networks:
+      - soccer_marketplace_local
+    env_file:
+      - ./.env.local
+    ports:
+      - "3386:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql:rw
+      - ./docker/mysql/soccer-marketplace.sql:/docker-entrypoint-initdb.d/soccer-marketplace.sql
+
+  adminer:
+    container_name: soccer_marketplace_local_adminer
+    networks:
+      - soccer_marketplace_local
+    ports:
+      - 8322:8080
+
+networks:
+  soccer_marketplace_local:
+    name: soccer_marketplace_local
