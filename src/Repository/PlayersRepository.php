@@ -24,7 +24,7 @@ class PlayersRepository extends ServiceEntityRepository
     public function getPlayersForSale(string $currentTeamsEmail, ?bool $upForSale = null): mixed
     {
         $qp = $this->createQueryBuilder('p')
-                   ->innerJoin('p.team','t')
+                   ->innerJoin('p.team', 't')
                    ->where('t.owner = :currentTeamsEmail')
                    ->setParameter('currentTeamsEmail', $currentTeamsEmail);
         if (is_bool($upForSale)) {
@@ -43,7 +43,7 @@ class PlayersRepository extends ServiceEntityRepository
     public function getPlayersAvailable(string $currentTeamsEmail): QueryBuilder
     {
         return $this->createQueryBuilder('p')
-                    ->innerJoin('p.team','t')
+                    ->innerJoin('p.team', 't')
                     ->where('t.owner = :currentTeamsEmail')
                     ->andWhere('p.upForSale = false')
                     ->setParameter('currentTeamsEmail', $currentTeamsEmail);
@@ -58,7 +58,7 @@ class PlayersRepository extends ServiceEntityRepository
     public function getPlayersToPurchase(string $login, ?int $currentTeamsSelected): mixed
     {
         $queryBuilder = $this->createQueryBuilder('p')
-                             ->innerJoin('p.team','t', Join::WITH, 't.owner <> :login')
+                             ->innerJoin('p.team', 't', Join::WITH, 't.owner <> :login')
                              ->where('p.upForSale = true')
                              ->setParameter('login', $login);
         if ($currentTeamsSelected) {

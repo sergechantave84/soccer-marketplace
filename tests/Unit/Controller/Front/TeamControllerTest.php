@@ -14,7 +14,8 @@ class TeamControllerTest extends WebTestCase
             []
         );
         $client->request('GET', '/home');
-        $this->assertEquals(200,
+        $this->assertEquals(
+            200,
             $client->getResponse()->getStatusCode(),
             "Le code retour devrait être 200"
         );
@@ -42,7 +43,8 @@ class TeamControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/create-team');
-        $this->assertEquals(400,
+        $this->assertEquals(
+            400,
             $client->getResponse()->getStatusCode(),
             "Le code retour devrait être 400"
         );
@@ -54,7 +56,8 @@ class TeamControllerTest extends WebTestCase
         $client = self::login();
 
         $client->request('GET', '/create-team');
-        $this->assertEquals(200,
+        $this->assertEquals(
+            200,
             $client->getResponse()->getStatusCode(),
             "Le code retour devrait être 200"
         );
@@ -76,7 +79,8 @@ class TeamControllerTest extends WebTestCase
             ],
             json_encode($body)
         );
-        $this->assertEquals(200,
+        $this->assertEquals(
+            200,
             $client->getResponse()->getStatusCode(),
             "Le code retour devrait être 200"
         );

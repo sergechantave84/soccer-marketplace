@@ -17,7 +17,7 @@ class Players
     private ?int $id = null;
 
     #[ORM\ManyToOne(cascade: ['remove','persist'], inversedBy: 'players')]
-    #[ORM\JoinColumn(nullable: false,onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     #[Groups(['player_read','player_create'])]
     private ?Teams $team = null;
 

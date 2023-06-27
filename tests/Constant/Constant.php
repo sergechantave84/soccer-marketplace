@@ -4,7 +4,7 @@ namespace App\Tests\Constant;
 
 final class Constant
 {
-    const USER = 'schantave@bocasay.com';
+    public const USER = 'schantave@bocasay.com';
 
     /**
      * @param string $username

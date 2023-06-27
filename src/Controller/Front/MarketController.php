@@ -12,7 +12,6 @@ use App\Form\Type\SaleType;
 use App\Manager\MarketManager;
 use App\Repository\PlayersRepository;
 use App\Repository\SalesRepository;
-use App\Repository\TeamsRepository;
 use App\Utils\SerializerStandard;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,16 +43,20 @@ class MarketController extends BaseController
             );
         }
         $data = $marketManager->dataMarketPages($login);
-        $formSale = $this->createForm(SaleType::class, null,
+        $formSale = $this->createForm(
+            SaleType::class,
+            null,
             [
                 'action' => $this->generateUrl('sale'),
-                'attr'   => ['id'=>'form-sale']
+                'attr'   => ['id' => 'form-sale']
             ]
         );
-        $formPurchase = $this->createForm(PurchaseType::class, null,
+        $formPurchase = $this->createForm(
+            PurchaseType::class,
+            null,
             [
                 'action' => $this->generateUrl('purchase'),
-                'attr'   => ['id'=>'form-purchase']
+                'attr'   => ['id' => 'form-purchase']
             ]
         );
 
@@ -79,10 +82,12 @@ class MarketController extends BaseController
     {
         try {
             $sale = new Sales();
-            $form = $this->createForm(SaleType::class, $sale,
+            $form = $this->createForm(
+                SaleType::class,
+                $sale,
                 [
                     'action' => $this->generateUrl('sale'),
-                    'attr'   => ['id'=>'form-sale']
+                    'attr'   => ['id' => 'form-sale']
                 ]
             );
             $formHandler = new SaleHandler(
@@ -117,7 +122,8 @@ class MarketController extends BaseController
      * @return JsonResponse
      */
     #[Route('/market/purchase', name: 'purchase', methods: ["POST"])]
-    public function purchase(Request $request,
+    public function purchase(
+        Request $request,
         PlayersRepository $playersRepository,
         EntityManagerInterface $entityManager
     ): JsonResponse {
@@ -134,7 +140,8 @@ class MarketController extends BaseController
             if ($teamSolde < $playerJSON->playerSale) {
                 return new JsonResponse(
                     [
-                        'message' => 'Vous ne disposez pas de solde suffisant pour acheter ce joueur. Votre solde actuel est de '
+                        'message' => 'Vous ne disposez pas de solde suffisant pour acheter ce joueur.'
+                                     . ' Votre solde actuel est de '
                                      . $teamSolde . $this->getParameter('euro_symbol'),
                     ],
                     Response::HTTP_BAD_REQUEST

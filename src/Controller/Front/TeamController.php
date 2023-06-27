@@ -29,7 +29,8 @@ class TeamController extends BaseController
     #[Route('/home', name: 'home', methods: ["POST", "GET"])]
     public function home(TeamsRepository $teamsRepository): Response
     {
-        return $this->render('front/homepage.html.twig',
+        return $this->render(
+            'front/homepage.html.twig',
             [
                 'teams' => $teamsRepository->findAll(),
             ]
@@ -66,10 +67,12 @@ class TeamController extends BaseController
             );
         }
         $team = new Teams();
-        $form = $this->createForm(TeamType::class, $team,
+        $form = $this->createForm(
+            TeamType::class,
+            $team,
             [
                 'action' => $this->generateUrl('create_team'),
-                'attr'   => ['id'=>'form-team']
+                'attr'   => ['id' => 'form-team']
             ]
         );
         if (Request::METHOD_POST == $request->getMethod()) {
@@ -104,7 +107,8 @@ class TeamController extends BaseController
     #[Route('/get-team/{id}', name: 'get_team', methods: ["GET"])]
     public function getTeam(Request $request, TeamsRepository $teamsRepository): Response
     {
-        return $this->render('front/team/team.html.twig',
+        return $this->render(
+            'front/team/team.html.twig',
             [
                 'team' => $teamsRepository->find($request->get('id')),
             ]

@@ -34,12 +34,14 @@ class PlayerController extends BaseController
     public function createPlayer(Request $request, EntityManagerInterface $entityManager): Response
     {
         $player = new Players();
-        $form = $this->createForm(PlayerType::class, $player,
+        $form = $this->createForm(
+            PlayerType::class,
+            $player,
             [
                 'action' => $this->generateUrl('create_player', [
                     'teamId' => $request->get('teamId')
                 ]),
-                'attr' => ['id'=>'form-player']
+                'attr' => ['id' => 'form-player']
             ]
         );
         if (Request::METHOD_POST == $request->getMethod()) {

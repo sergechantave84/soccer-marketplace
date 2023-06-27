@@ -21,24 +21,28 @@ class TeamType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name',
+            ->add(
+                'name',
                 TextType::class,
                 [
                     'label' => "Nom: ",
                     'attr'  => [
                         "class"       => "form-control",
                         "placeholder" => "nom",
-                ],
-            ])
-            ->add('country',
+                    ],
+                ]
+            )
+            ->add(
+                'country',
                 TextType::class,
                 [
                     'label' => "Pays: ",
                     'attr'  => [
                         "class"       => "form-control",
                         "placeholder" => "pays",
-                ],
-            ])
+                    ],
+                ]
+            )
             ->add(
                 'moneyBalance',
                 NumberType::class,

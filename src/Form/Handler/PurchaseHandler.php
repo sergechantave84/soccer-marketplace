@@ -23,7 +23,8 @@ class PurchaseHandler
      * @param EntityManagerInterface $entityManager
      * @param string $login
      */
-    public function __construct(mixed $playerJSON,
+    public function __construct(
+        mixed $playerJSON,
         PlayersRepository $playersRepository,
         EntityManagerInterface $entityManager,
         string $login
@@ -41,7 +42,9 @@ class PurchaseHandler
     {
         $player = $this->playersRepository->find((int)$this->playerJSON->id);
         if ($player instanceof Players) {
-            $team = $this->entityManager->getRepository(Teams::class)->findOneBy(['id'=>$this->playerJSON->buyerTeamId]);
+            $team = $this->entityManager->getRepository(Teams::class)->findOneBy([
+                'id' => $this->playerJSON->buyerTeamId
+            ]);
             if ($team instanceof Teams) {
                 $team->setMoneyBalance($team->getMoneyBalance() - (float)$this->playerJSON->playerSale);
             }

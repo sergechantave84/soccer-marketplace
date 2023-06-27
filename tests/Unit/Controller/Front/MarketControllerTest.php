@@ -12,7 +12,8 @@ class MarketControllerTest extends WebTestCase
             []
         );
         $client->request('GET', '/market/');
-        $this->assertEquals(400,
+        $this->assertEquals(
+            400,
             $client->getResponse()->getStatusCode(),
             "Le code retour devrait être 400"
         );

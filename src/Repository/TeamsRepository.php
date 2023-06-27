@@ -23,7 +23,7 @@ class TeamsRepository extends ServiceEntityRepository
     public function getTeamsWithPlayerForSale(string $owner): QueryBuilder
     {
         return $this->createQueryBuilder('t')
-            ->innerJoin('t.players','p', Join::WITH, 'p.upForSale = true')
+            ->innerJoin('t.players', 'p', Join::WITH, 'p.upForSale = true')
             ->where('t.owner <> :owner')
             ->setParameter('owner', $owner);
     }

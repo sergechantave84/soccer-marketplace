@@ -25,7 +25,7 @@ class MarketManager
     ])] public function dataMarketPages(string $login): array
     {
         return [
-            'buyerTeam'         => $this->teamsRepository->findOneBy(['owner'=>$login]),
+            'buyerTeam'         => $this->teamsRepository->findOneBy(['owner' => $login]),
             'playersToUpSale'   => $this->playersRepository->getPlayersForSale($login, true),
             'playersAvailable'  => $this->playersRepository->getPlayersAvailable($login)->getQuery()->getResult(),
             'playersToPurchase' => $this->playersRepository->getPlayersToPurchase($login, null),
