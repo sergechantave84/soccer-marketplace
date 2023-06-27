@@ -53,8 +53,11 @@ class TeamController extends BaseController
      * @return Response
      */
     #[Route('/create-team', name: 'create_team', methods: ["POST", "GET"])]
-    public function createTeam(Request $request, TeamsRepository $teamsRepository, EntityManagerInterface $entityManager): Response
-    {
+    public function createTeam(
+        Request $request,
+        TeamsRepository $teamsRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
         $login = $request->getSession()->get('login');
         if (is_null($login)) {
             return new Response(

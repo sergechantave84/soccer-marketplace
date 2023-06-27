@@ -9,6 +9,7 @@ use App\Form\Handler\PurchaseHandler;
 use App\Form\Handler\SaleHandler;
 use App\Form\Type\PurchaseType;
 use App\Form\Type\SaleType;
+use App\Manager\MarketManager;
 use App\Repository\PlayersRepository;
 use App\Repository\SalesRepository;
 use App\Repository\TeamsRepository;
@@ -28,12 +29,12 @@ class MarketController extends BaseController
 {
     /**
      * @param Request $request
-     * @param PlayersRepository $playersRepository
+     * @param MarketManager $marketManager
      *
      * @return Response
      */
     #[Route('/market/', name: 'market', methods: ["GET"])]
-    public function market(Request $request, PlayersRepository $playersRepository, TeamsRepository $teamsRepository): Response
+    public function market(Request $request, MarketManager $marketManager): Response
     {
         $login = $request->getSession()->get('login');
         if (is_null($login)) {
@@ -42,11 +43,7 @@ class MarketController extends BaseController
                 Response::HTTP_BAD_REQUEST
             );
         }
-        $buyerTeam = $teamsRepository->findOneBy(['owner'=>$login]);
-        $playersToUpSale = $playersRepository->getPlayersForSale($login, true);
-        $playersAvailable = $playersRepository->getPlayersAvailable($login)->getQuery()->getResult();
-        $playersToPurchase = $playersRepository->getPlayersToPurchase($login, null);
-        $myPlayers = $playersRepository->getPlayersForSale($login);
+        $data = $marketManager->dataMarketPages($login);
         $formSale = $this->createForm(SaleType::class, null,
             [
                 'action' => $this->generateUrl('sale'),
@@ -59,15 +56,16 @@ class MarketController extends BaseController
                 'attr'   => ['id'=>'form-purchase']
             ]
         );
+        dump($data['buyerTeam']);die;
 
         return $this->render('front/market.html.twig', [
-            'playersToUpSale'     => $playersToUpSale,
-            'playersToPurchase'   => $playersToPurchase,
-            'myPlayers'           => $myPlayers,
+            'playersToUpSale'     => $data['playersToUpSale'],
+            'playersToPurchase'   => $data['playersToPurchase'],
+            'myPlayers'           => $data['myPlayers'],
             'formSale'            => $formSale->createView(),
             'formPurchase'        => $formPurchase->createView(),
-            'nonePlayerAvailable' => count($playersAvailable) > 0,
-            'buyerTeam'           => $buyerTeam
+            'nonePlayerAvailable' => count($data['playersAvailable']) > 0,
+            'buyerTeam'           => $data['buyerTeam']
         ]);
     }
 
