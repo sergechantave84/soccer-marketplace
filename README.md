@@ -57,14 +57,14 @@ NOTE: Vous ne pouvez ajouter des joueurs qu'à votre propre équipe gràce au bo
 
 ## Menu Créer une équipe
 - C'est un menu pour accéder à la création d'une équipe et ajout de joueurs à cette équipe
-NOTE:
-* IL faut renseigner une adresse email pour accéder à ce menu (Veulliez cliquer sur le boton "Renseigner un émail")
-* Un bouton "Se déconnecter" apparait une fois que vous avez renseigné une adresse email, afin de vous déconnecter 
+- NOTE :
+  - Il faut renseigner une adresse email pour accéder à ce menu (Veulliez cliquer sur le boton "Renseigner un émail")
+  - Un bouton "Se déconnecter" apparait une fois que vous avez renseigné une adresse email, afin de vous déconnecter 
 de l'application et d'utiliser le site à l'aide d'un autre compte email.
 
 ## Menu Vendre/Acheter des joueurs
 - C'est un menu pour accéder à la vente de vos propres joueurs d'une part et l'achat des joueurs des autres équipes d'autres parts
-NOTE:
-* Vous ne pouvez vendre que vos propres joueurs
-* Vous ne pourrez acheter que les joueurs mis en vente par les autres équipes
+- NOTE :
+  - Vous ne pouvez vendre que vos propres joueurs
+  - Vous ne pourrez acheter que les joueurs mis en vente par les autres équipes
 

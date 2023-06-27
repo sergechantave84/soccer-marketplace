@@ -17,13 +17,15 @@ class PlayerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'attr' => [
+                'label' => "Nom: ",
+                'attr'  => [
                     "class"       => "form-control",
                     "placeholder" => "nom",
                 ],
             ])
             ->add('surname', TextType::class, [
-                'attr' => [
+                'label' => "Prénom: ",
+                'attr'  => [
                     "class"       => "form-control",
                     "placeholder" => "prénom",
                 ],
