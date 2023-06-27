@@ -56,7 +56,6 @@ class MarketController extends BaseController
                 'attr'   => ['id'=>'form-purchase']
             ]
         );
-        dump($data['buyerTeam']);die;
 
         return $this->render('front/market.html.twig', [
             'playersToUpSale'     => $data['playersToUpSale'],
