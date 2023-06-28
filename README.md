@@ -45,11 +45,12 @@ php bin/phpunit
 ```
 
 # Utilisation de l'application
-Accéder à l'url : https://localhost:8303/
-**REM**:  Le navigateur bloque l'accès au site car le certificat SSL est un faux, 
+- Accéder à l'url : https://localhost:8303/
+- **REM**: 
+  - Le navigateur bloque l'accès au site car le certificat SSL est un faux, 
 il faut alors pour firefox cliquer sur **avancé** , puis sur **Accepter le risque et poursuivre** , pour Chrome cliquer sur **faire une exception**, puis **aller vers le site**
 
-Une fois la page d'accueil ouverte, renseigner l'adresse email: schantave@bocasay.com en cliquant sur le bouton "Renseigner une adresse email"
+- Une fois la page d'accueil ouverte, renseigner l'adresse email: schantave@bocasay.com en cliquant sur le bouton "Renseigner une adresse email"
 
 ## Menu Accueil
 - Liste de toutes les équipes
