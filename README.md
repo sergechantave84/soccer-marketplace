@@ -53,7 +53,8 @@ Une fois la page d'accueil ouverte, renseigner l'adresse email: schantave@bocasa
 
 ## Menu Accueil
 - Liste de toutes les équipes
-NOTE: Vous ne pouvez ajouter des joueurs qu'à votre propre équipe gràce au bouton "Ajouter un joueur"
+- NOTE: 
+  - Vous ne pouvez ajouter des joueurs qu'à votre propre équipe gràce au bouton "Ajouter un joueur"
 
 ## Menu Créer une équipe
 - C'est un menu pour accéder à la création d'une équipe et ajout de joueurs à cette équipe
